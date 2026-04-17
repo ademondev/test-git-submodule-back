@@ -38,3 +38,6 @@
 
 ### Fixed
 - Improved error handling for user operations
+
+### Added
+- Papas con queso
