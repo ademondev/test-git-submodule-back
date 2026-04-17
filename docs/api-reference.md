@@ -3,20 +3,24 @@
 ## Endpoints
 
 ### GET /api/health
+
 Returns the health status of the API.
 
 **Response:**
+
 ```json
 {
-  "status": "ok",
+  "status": "NOT OK",
   "timestamp": "2026-04-17T10:00:00Z"
 }
 ```
 
 ### GET /api/users
+
 Returns a list of users.
 
 **Response:**
+
 ```json
 {
   "users": [
@@ -30,9 +34,11 @@ Returns a list of users.
 ```
 
 ### POST /api/users
+
 Creates a new user.
 
 **Request Body:**
+
 ```json
 {
   "name": "string",
@@ -41,6 +47,7 @@ Creates a new user.
 ```
 
 **Response:**
+
 ```json
 {
   "id": 3,
@@ -51,9 +58,11 @@ Creates a new user.
 ```
 
 ### DELETE /api/users/:id
+
 Deletes a user by ID.
 
 **Response:**
+
 ```json
 {
   "message": "User deleted successfully"
@@ -61,9 +70,11 @@ Deletes a user by ID.
 ```
 
 ### GET /api/status
+
 Returns detailed system status information.
 
 **Response:**
+
 ```json
 {
   "status": "operational",
@@ -76,9 +87,11 @@ Returns detailed system status information.
 ## Batch Operations
 
 ### POST /api/users/batch
+
 Creates multiple users in a single request.
 
 **Request Body:**
+
 ```json
 {
   "users": [
@@ -95,6 +108,7 @@ Creates multiple users in a single request.
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Created 2 users",
@@ -116,9 +130,11 @@ Creates multiple users in a single request.
 ```
 
 ### DELETE /api/users/batch
+
 Deletes multiple users by their IDs.
 
 **Request Body:**
+
 ```json
 {
   "ids": [1, 2, 3]
@@ -126,6 +142,7 @@ Deletes multiple users by their IDs.
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Deleted 2 users",
@@ -137,13 +154,16 @@ Deletes multiple users by their IDs.
 ## Pagination
 
 ### GET /api/users?page=1&limit=10
+
 Returns a paginated list of users.
 
 **Query Parameters:**
+
 - `page` (optional): Page number (default: 1)
 - `limit` (optional): Number of users per page (default: 10, max: 100)
 
 **Response:**
+
 ```json
 {
   "users": [
@@ -167,9 +187,11 @@ Returns a paginated list of users.
 ## Search
 
 ### GET /api/users/search
+
 Search for users by name or email.
 
 **Query Parameters:**
+
 - `q` (optional): General search term (searches both name and email)
 - `name` (optional): Filter by name (partial match)
 - `email` (optional): Filter by email (partial match)
@@ -177,12 +199,14 @@ Search for users by name or email.
 At least one parameter is required.
 
 **Examples:**
+
 - `/api/users/search?q=john` - Search for "john" in names and emails
 - `/api/users/search?name=doe` - Search for users with "doe" in their name
 - `/api/users/search?email=example.com` - Search for users with "example.com" in their email
 - `/api/users/search?name=jane&email=gmail` - Combined filters
 
 **Response:**
+
 ```json
 {
   "users": [
@@ -200,3 +224,4 @@ At least one parameter is required.
   }
 }
 ```
+
