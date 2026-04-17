@@ -157,6 +157,46 @@ app.delete('/api/users/batch', (req, res) => {
   });
 });
 
+// Search endpoint
+app.get('/api/users/search', (req, res) => {
+  const { q, name, email } = req.query;
+  
+  if (!q && !name && !email) {
+    return res.status(400).json({ error: 'Search query parameter (q) or specific filters (name, email) required' });
+  }
+  
+  let filteredUsers = users;
+  
+  // General search across name and email
+  if (q) {
+    const searchTerm = q.toLowerCase();
+    filteredUsers = users.filter(user => 
+      user.name.toLowerCase().includes(searchTerm) ||
+      user.email.toLowerCase().includes(searchTerm)
+    );
+  }
+  
+  // Specific name filter
+  if (name) {
+    filteredUsers = filteredUsers.filter(user => 
+      user.name.toLowerCase().includes(name.toLowerCase())
+    );
+  }
+  
+  // Specific email filter  
+  if (email) {
+    filteredUsers = filteredUsers.filter(user =>
+      user.email.toLowerCase().includes(email.toLowerCase())
+    );
+  }
+  
+  res.json({
+    users: filteredUsers,
+    total: filteredUsers.length,
+    query: { q, name, email }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);

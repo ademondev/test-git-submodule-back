@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.5.0 (2026-04-17)
+
+### Added
+- User search endpoint (GET /api/users/search)
+- Support for general search query (q parameter)
+- Support for specific name and email filters
+- Combined search filters capability
+
 ## Version 1.4.0 (2026-04-17)
 
 ### Added

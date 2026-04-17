@@ -163,3 +163,40 @@ Returns a paginated list of users.
   }
 }
 ```
+
+## Search
+
+### GET /api/users/search
+Search for users by name or email.
+
+**Query Parameters:**
+- `q` (optional): General search term (searches both name and email)
+- `name` (optional): Filter by name (partial match)
+- `email` (optional): Filter by email (partial match)
+
+At least one parameter is required.
+
+**Examples:**
+- `/api/users/search?q=john` - Search for "john" in names and emails
+- `/api/users/search?name=doe` - Search for users with "doe" in their name
+- `/api/users/search?email=example.com` - Search for users with "example.com" in their email
+- `/api/users/search?name=jane&email=gmail` - Combined filters
+
+**Response:**
+```json
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  ],
+  "total": 1,
+  "query": {
+    "q": "john",
+    "name": null,
+    "email": null
+  }
+}
+```
