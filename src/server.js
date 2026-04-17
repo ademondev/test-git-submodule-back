@@ -35,9 +35,27 @@ let users = [
 ];
 let nextUserId = 3;
 
-// Users endpoints
+// Users endpoints with pagination
 app.get('/api/users', (req, res) => {
-  res.json({ users });
+  const page = parseInt(req.query.page) || 1;
+  const limit = Math.min(parseInt(req.query.limit) || 10, 100); // Max 100 per page
+  const offset = (page - 1) * limit;
+  
+  const paginatedUsers = users.slice(offset, offset + limit);
+  const total = users.length;
+  const pages = Math.ceil(total / limit);
+  
+  res.json({
+    users: paginatedUsers,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages,
+      hasNext: page < pages,
+      hasPrev: page > 1
+    }
+  });
 });
 
 app.post('/api/users', (req, res) => {
