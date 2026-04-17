@@ -8,6 +8,8 @@ on:
 jobs:
   sync-docs:
     runs-on: ubuntu-latest
+    # Skip if this push was made by the propagation action to avoid infinite loops
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,29 +22,20 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-      - name: Add docs remote
-        run: |
-          git remote add docs-remote https://x-access-token:${{ secrets.DOCS_SYNC_TOKEN }}@github.com/ademondev/test-git-submodule-docs.git || true
-
       - name: Push docs changes to docs repository
         run: |
-          # Create temporary branch with docs changes
-          TEMP_BRANCH="docs-sync-$(date +%s)"
+          git clone https://x-access-token:${{ secrets.DOCS_SYNC_TOKEN }}@github.com/ademondev/test-git-submodule-docs.git docs-repo
           
-          # Fetch latest from docs repo
-          git fetch docs-remote
-          git checkout -b "$TEMP_BRANCH" docs-remote/main
+          # Copy docs to the docs repo
+          cp docs/*.md docs-repo/
           
-          # Copy current docs files
-          rm -rf *.md *.txt 2>/dev/null || true
-          cp -r docs/* . 2>/dev/null || true
+          cd docs-repo
           
-          # Check for changes and push
-          if ! git diff --quiet || ! git diff --cached --quiet; then
+          if ! git diff --quiet; then
             git add .
-            git commit -m "Auto-sync docs from backend (${GITHUB_SHA:0:8})" || true
-            git push docs-remote "$TEMP_BRANCH":main
-            echo "✅ Docs synced successfully"
+            git commit -m "docs: sync from backend (${GITHUB_SHA:0:8}) [skip ci]"
+            git push origin main
+            echo "✅ Docs synced to docs repository"
           else
             echo "ℹ️ No docs changes to sync"
           fi
