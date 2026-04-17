@@ -26,6 +26,11 @@ let users = [
     id: 2,
     name: 'Jane Smith',
     email: 'jane@example.com'
+  },
+  {
+    id: 3,
+    name: 'Jim Beam',
+    email: 'jim@example.com'
   }
 ];
 let nextUserId = 3;
