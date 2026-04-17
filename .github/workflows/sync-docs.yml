@@ -9,7 +9,7 @@ jobs:
   sync-docs:
     runs-on: ubuntu-latest
     # Skip if this push was made by the propagation action to avoid infinite loops
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: "!contains(github.event.head_commit.message, '[from-docs]')"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,7 +33,7 @@ jobs:
           
           if ! git diff --quiet; then
             git add .
-            git commit -m "docs: sync from backend (${GITHUB_SHA:0:8}) [skip ci]"
+            git commit -m "docs: sync from backend (${GITHUB_SHA:0:8})"
             git push origin main
             echo "✅ Docs synced to docs repository"
           else
