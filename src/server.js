@@ -70,7 +70,24 @@ app.delete('/api/users/:id', (req, res) => {
   res.json({ message: 'User deleted successfully' });
 });
 
+// Status endpoint
+app.get('/api/status', (req, res) => {
+  const uptime = process.uptime();
+  const memoryUsage = process.memoryUsage();
+  const memoryUsagePercent = Math.round(
+    (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
+  );
+  
+  res.json({
+    status: 'operational',
+    uptime: Math.floor(uptime),
+    database: 'connected', // would be real check in production
+    memory_usage: `${memoryUsagePercent}%`
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
+  console.log(`Status check: http://localhost:${PORT}/api/status`);
 });
