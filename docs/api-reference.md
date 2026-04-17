@@ -23,7 +23,7 @@ Returns a list of users.
 
 ```json
 {
-  "users": [
+  "users": [afasdas
     {
       "id": 1,
       "name": "John Doe",

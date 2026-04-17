@@ -29,7 +29,7 @@ let users = [
   },
   {
     id: 3,
-    name: 'Jim Beamy',
+    name: 'Jim Beamys',
     email: 'jim@example.com'
   }
 ];
