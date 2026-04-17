@@ -26,4 +26,23 @@ jobs:
 
       - name: Push docs changes to docs repository
         run: |
-          git subtree push --prefix=docs docs-remote main
+          # Create temporary branch with docs changes
+          TEMP_BRANCH="docs-sync-$(date +%s)"
+          
+          # Fetch latest from docs repo
+          git fetch docs-remote
+          git checkout -b "$TEMP_BRANCH" docs-remote/main
+          
+          # Copy current docs files
+          rm -rf *.md *.txt 2>/dev/null || true
+          cp -r docs/* . 2>/dev/null || true
+          
+          # Check for changes and push
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            git add .
+            git commit -m "Auto-sync docs from backend (${GITHUB_SHA:0:8})" || true
+            git push docs-remote "$TEMP_BRANCH":main
+            echo "✅ Docs synced successfully"
+          else
+            echo "ℹ️ No docs changes to sync"
+          fi
