@@ -86,6 +86,59 @@ app.get('/api/status', (req, res) => {
   });
 });
 
+// Batch operations endpoints
+app.post('/api/users/batch', (req, res) => {
+  const { users: newUsers } = req.body;
+  
+  if (!Array.isArray(newUsers) || newUsers.length === 0) {
+    return res.status(400).json({ error: 'Users array is required' });
+  }
+  
+  const createdUsers = newUsers.map(userData => {
+    const { name, email } = userData;
+    if (!name || !email) {
+      throw new Error('Name and email are required for each user');
+    }
+    
+    const newUser = {
+      id: nextUserId++,
+      name,
+      email,
+      created: new Date().toISOString()
+    };
+    users.push(newUser);
+    return newUser;
+  });
+  
+  res.status(201).json({ 
+    message: `Created ${createdUsers.length} users`,
+    users: createdUsers 
+  });
+});
+
+app.delete('/api/users/batch', (req, res) => {
+  const { ids } = req.body;
+  
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'IDs array is required' });
+  }
+  
+  const deletedCount = ids.reduce((count, id) => {
+    const userIndex = users.findIndex(user => user.id === parseInt(id));
+    if (userIndex !== -1) {
+      users.splice(userIndex, 1);
+      return count + 1;
+    }
+    return count;
+  }, 0);
+  
+  res.json({ 
+    message: `Deleted ${deletedCount} users`,
+    requested: ids.length,
+    deleted: deletedCount
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/api/health`);
